@@ -70,6 +70,8 @@ public class SongController {
 										@RequestParam("vinyls") Long VinylID,
 										HttpSession session) {
 		Long loginId = (Long) session.getAttribute("userId");
+		System.out.println("This is the login in");
+		System.out.println(loginId);
 		if (loginId != null) {
 			Song thisSong = songService.findSong(SongID);
 			Vinyl thisVinyl = vinylService.findVinyl(VinylID);

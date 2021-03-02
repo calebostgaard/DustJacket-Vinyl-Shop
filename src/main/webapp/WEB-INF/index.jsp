@@ -28,7 +28,7 @@
 	            <td><c:out value="${i.album}"/></td>
 	            <td><a href="/genres/${i.genre.id}/"><c:out value="${i.genre.name}"/></a></td>
 	            <td>
-	           		<form action="/vinyls/addsong/${i.id}" method="post">
+	           		<form action="/vinyls/addsongs/${i.id}" method="post">
 				        <select name="vinyls">
 				        	<c:forEach items="${vinyls}" var="v">
 				        		<option value="${v.id}">
