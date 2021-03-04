@@ -1,0 +1,8 @@
+.hover:hover{
+	transform: scale(1.01);
+}
+
+.item-hover:hover{
+	color:green;
+	transform: scale(1.01);
+}

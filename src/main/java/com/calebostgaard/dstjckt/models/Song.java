@@ -26,7 +26,9 @@ public class Song {
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    
+	
+    private String spotifyID;
+
     @Size(min = 2, max = 200)
     private String name;
     
@@ -149,6 +151,17 @@ public class Song {
 	public void setGenre(Genre genre) {
 		this.genre = genre;
 	}
+
+
+	public String getSpotifyID() {
+		return spotifyID;
+	}
+
+
+	public void setSpotifyID(String spotifyID) {
+		this.spotifyID = spotifyID;
+	}
     
+	
 
 }
