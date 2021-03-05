@@ -1,13 +1,13 @@
-function previewTrack(external_link){
-	window.open(external_link, '_blank');
-}
-
 $(document).ready(function(){
+	
 	var data; // this holds the spotify data and gets defned in the
 			// form submission and ajax call
+	var previousData;
+	var artistDetailData;
+	var artistTopTrackData;
+	var previousPageHTML; // for when you move to the artist page
 	
-	
-	$("#searchForm").submit(function(event){
+	$(document.body).on("submit", "#searchForm", function(event){
 		event.preventDefault();
 		var t = $("#searchBar").val();
 		var options = document.getElementsByClassName('searchBarOption');
@@ -18,6 +18,8 @@ $(document).ready(function(){
 				option = options[i].value;
 			}
 		}
+		
+		option= $("#searchOption").val();
 		
 		$("#searchForm").toggle("explode");
 		$.ajax({
@@ -31,21 +33,21 @@ $(document).ready(function(){
 				console.log(temp);
 				console.log(temp[option]['items'][0].name);
 				$("#gallery").empty();
+				var galleryHeader;
 				if (option=="tracks"){
-					var galleryHeader = "<div id='galleryHeader' class='row' style='display:none;'><h2 class='col'><span class='text-white bg-dark'>Song Title </span>& Related Artists <span class='text-muted'>& Related Album</span></h2><h2 class='col-3 text-right text-muted' id='searchHeader'>Search Again</h2></div>";
+					galleryHeader = "<div id='galleryHeader' style='display:none;' class='row'><h2 class='col'><span class='text-white bg-dark'>Song Title </span>& Related Artists <span class='text-muted'>& Related Album</span></h2><h2 class='col-3 text-right text-muted' id='searchHeader'>Search Again</h2></div>";
 				} else{
-					var galleryHeader = "<div id='galleryHeader' class='row' style='display:none;'><h2 class='col'><span class='text-white bg-dark'>Artist </span>& Related Genres</h2><h2 class='col-3 text-right text-muted' id='searchHeader'>Search Again</h2></div>";
+					galleryHeader = "<div id='galleryHeader' style='display:none;' class='row'><h2 class='col'><span class='text-white bg-dark'>Artist </span>& Related Genres</h2><h2 class='col-3 text-right text-muted' id='searchHeader'>Search Again</h2></div>";
 				}
 				$("#gallery").append(galleryHeader);
 				$("#galleryHeader").fadeIn("slow");
-//				$("#searchHeader").fadeIn("slow");
 				
 				for (var i = 0; i < temp[option]['items'].length; i++){
 
 //				<h3 id="song1"></h3>
 //				<img style="width: 40px; height: 40px" src="" id="album_img_1">					
 					var section = `#section_${i}`;
-					var sectionHTML = `<div class='searchData' style="display:none;" id=section_${i}></div>`
+					var sectionHTML = `<div class='searchData hide-start' id=section_${i}></div>`
 					var firstField = temp[option]['items'][i].name;
 					var secondField = "";
 					var thirdField = "";
@@ -59,14 +61,18 @@ $(document).ready(function(){
 						secondField = secondField.substring(0, secondField.length - 2);
 						
 						var thirdField = temp[option]['items'][i]['album'].name;
-						external_link = temp[option]['items'][i]['external_urls']['spotify'];
+				
+						external_link = temp[option]['items'][i].preview_url;
+						if (external_link == null){
+							external_link = temp[option]['items'][i]['external_urls']['spotify'];
+						}
 						
 						var testHTML = `
-							<ul class='options' style='display:none;' id="options_${i}">
-								<li class='addToVinyl hover' id='addToVinyl_${i}'><h5>Add to A Vinyl</h5></li>
-								<li class='saveToPlaylist hover' id='saveToPlaylist_${i}'><h5>Save to A Playlist</h5></li>
-								<li class='preview hover' id='preview_${i}'>
-									<h5 onclick="previewTrack('${external_link}')">preview in spotify</h5>
+							<ul class='options no-bullets hide-start' id="options_${i}">
+								<li class='addToVinyl item-hover' id='addToVinyl_${i}'><h5>Add to A Vinyl</h5></li>
+								<li class='saveToPlaylist item-hover' id='saveToPlaylist_${i}'><h5>Save to A Playlist</h5></li>
+								<li class='preview item-hover' id='preview_${i}'>
+									<h5 onclick="previewTrack('${external_link}')">preview song</h5>
 								</li>
 							</ul>
 						`
@@ -86,12 +92,11 @@ $(document).ready(function(){
 ////						}
 //						
 ////						thirdField = thirdField.substring(0, thirdField.length - 2);
-
+						external_link = temp[option]['items'][i]['external_urls']['spotify'];
 						var testHTML = `
-							<ul class='options' style='display:none;' id="options_${i}">
-								<li class='albums hover' id='albums_${i}'><h5>Albums</h5></li>
-								<li class='top_tracks hover' id='topTracks_${i}'><h5>Top tracks</h5></li>
-								<li class='preview_artist hover' id='previewArtist_${i}'>
+							<ul class="options no-bullets hide-start" id="options_${i}">
+								<li class='albums item-hover' id='albums_${i}'><h5>More Details</h5></li>
+								<li class='preview_artist item-hover' id='previewArtist_${i}'>
 									<h5 onclick="previewTrack('${external_link}')">preview in spotify</h5>
 								</li>
 							</ul>
@@ -152,7 +157,7 @@ $(document).ready(function(){
 		var optionListId = "vinylList_" + $(this).prop("id").split("_")[1];
 		var optionListSelector = "#" + optionListId;
 		var optionList = `
-			<ul style="display:none;" id=${optionListId}>
+			<ul class="hide-start no-bullets" id=${optionListId}>
 				<li class="vinyl item-hover"><h5>Option 1</h5></li>
 				<li class="vinyl item-hover"><h5>Option 2</h5></li>
 				<li class="vinyl item-hover"><h5>Option 3</h5></li>
@@ -175,7 +180,7 @@ $(document).ready(function(){
 		for (var i = 0; i < trackArtists.length; i++){
 			trackArtistsString += trackArtists[i].id + ",";
 		}
-		var alert = "<p id='alert' style='display:none;' class='alert alert-success' role='alert'>Success!</p>";
+		var alert = "<p id='alert' class='hide-start alert alert-success' role='alert'>Success!</p>";
 		var temp = $(this).parent().parent().parent().prepend(alert);
 		$.ajax({
 			url: '/addSongToVinyl',
@@ -231,7 +236,7 @@ $(document).ready(function(){
 		var optionListId = "playlistList_" + $(this).prop("id").split("_")[1];
 		var optionListSelector = "#" + optionListId;
 		var optionList = `
-			<ul style="display:none;" id=${optionListId}>
+			<ul class="hide-start no-bullets" id=${optionListId}>
 				<li class="playlist item-hover"><h5>Option 1</h5></li>
 				<li class="playlist item-hover"><h5>Option 2</h5></li>
 				<li class="playlist item-hover"><h5>Option 3</h5></li>
@@ -246,7 +251,7 @@ $(document).ready(function(){
 		e.stopPropagation();
 		console.log("clicked playlist");
 		console.log("successfully added song to Playlist");
-		var alert = "<p id='alert' style='display:none;' class='alert alert-success' role='alert'>Success!</p>";
+		var alert = "<p id='alert' class='hide-start alert alert-success' role='alert'>Success!</p>";
 		var temp = $(this).parent().parent().parent().prepend(alert);
 		$("#alert").toggle("slide","slow",function(){
 			setTimeout(function(){
@@ -258,9 +263,148 @@ $(document).ready(function(){
 	// go to the albums page
 	$(document.body).on("click", ".albums",function(e){
 		e.stopPropagation();
-		$(".container").toggle("explode");
-		window.location.href = "/artist";
+		var artistIndex = $(this).parent().parent().parent().prop("id").split("_")[1];
+		var artistSelectedId = data['artists']['items'][artistIndex].id;
+		console.log(artistSelectedId);
+		$.ajax({
+			url: "/artistTopTracks8",
+			data: {
+				'artist_id': artistSelectedId
+			},
+			success:function(e){
+				previousData = data;
+				artistTopTrackData = JSON.parse(e);
+				console.log(artistTopTrackData);
+			}, error: function(e){
+				console.log("not redirected");
+			}, complete: function(){
+				$.ajax({
+					url: "/artistDetails8",
+					data: {
+						'artist_id': artistSelectedId
+					},
+					success:function(e){
+						previousData = data;
+						artistDetailData = JSON.parse(e);
+						console.log(artistDetailData);
+					}, error: function(e){
+						console.log("not redirected");
+					}, complete: function(){
+						$.ajax({
+							url: "/getPageContent",
+							data: {
+								'title': 'artistPage',	
+							}, success: function(e){
+								console.log("rendering new page");
+								$(".container").toggle("fade", "slow");
+								setTimeout(function(){
+									previousPageHTML =$(".container").html; 
+									$(".container").empty();
+									$(".container").append(e);
+									populateArtistPage(artistDetailData, artistTopTrackData);	
+								}, 1000)
+								console.log("appended");
+							}, error: function(e){
+								console.log("couldn't grab the html");
+							}, complete: function(){
+								// populate the values
+								
+								setTimeout(function(){
+									$("#container").toggle("fade", "slow");
+				
+									
+									
+								}, 1000);
+		//						$(".container").toggle("fade", "slow");
+								console.log("second fade");
+							}	
+						})
+					}
+				})
+			}
+		});
 	});
 	
+	$(document).on("click", ".track", function(e){
+		e.stopPropagation();
+		$(this).parent().children("ul").first().toggle("fold");	
+	});
+	
+	$(document).on("click", ".topTrack_addToVinyl", function(e){
+		e.stopPropagation();
+		$(this).children("ul").first().toggle("fold");	
+	});
+	
+	// show what is clicked on the page and print to console. Test stuff
 	$(document).click(function(e){ console.log(e.target);});
-})   
+	
+
+})
+
+function previewTrack(external_link){
+	window.open(external_link, '_blank');
+}
+
+function mainSearchPage(){
+	$.ajax({
+		url:"/getPageContent",
+		data: {
+			'title': 'mainSearchPage'
+		}, success: function(e){
+			$(".container").toggle("explode");
+			setTimeout(function(){
+				$(".container").empty();
+				$(".container").append(e);	
+			}, 1000);
+		}, error: function(e){
+			console.log("couldn't grab the html");
+		}, complete: function(){
+			
+			setTimeout(function(){
+				$(".container").toggle("slide", "slow");	
+				
+			}, 1000);
+			
+		}	
+	})
+}
+
+function populateArtistPage(artistDetailData, artistTopTrackData){
+	$("#artistPicture").attr("src", artistDetailData['images'][0]['url']);
+	$("#artistPicture").css("height", artistDetailData['images'][0]['height'] + "px");
+	$("#artistPicture").css("width", artistDetailData['images'][0]['width'] + "px");
+	
+	$("#artistHeader").text(artistDetailData['name']);
+	$("#artistHeader").append("<h6 class='text-muted'>" + artistDetailData['followers']['total'] + " people following on Spotify</h6>");
+	
+	
+	for (var i=0; i < artistTopTrackData['tracks'].length; i++){
+		var trackName = artistTopTrackData['tracks'][i].name;
+		var previewLink = artistTopTrackData['tracks'][i].preview_url;
+		if (previewLink == null){
+			previewLink = artistTopTrackData['tracks'][i]['external_urls'].spotify;
+		}
+		var artistsOnTheTrack = artistTopTrackData['tracks'][i]['artists'];
+		var album = artistTopTrackData['tracks'][i]['album']['name'];
+		var htmlString = `
+			<li class='hover'">
+				<h3 class="track" id='topTrack_${i}'>
+					${trackName}
+					<span class="track text-muted" id="topTrack_${i}_album">${album}</span>
+					<span class="track text-muted" id="topTrack_${i}_artists"></span>
+				</h3>
+				<ul class="no-bullets hide-start">	
+					<li class='item-hover' onclick="previewTrack('${previewLink}')">preview song<li>
+					<li class='topTrack_addToVinyl item-hover'>
+						Add to Vinyl
+						<ul class='vinyl_list hide-start no-bullets'>
+							<li class='item-hover'>Option 1</li>
+							<li class='item-hover'>Option 2</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		`
+		$("#accordion").append(htmlString);
+	}
+}

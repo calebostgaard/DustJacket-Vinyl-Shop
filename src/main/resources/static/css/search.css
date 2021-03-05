@@ -6,3 +6,11 @@
 	color:green;
 	transform: scale(1.01);
 }
+
+.no-bullets{
+	list-style-type: none;
+}
+
+.hide-start{
+	display: none;
+}

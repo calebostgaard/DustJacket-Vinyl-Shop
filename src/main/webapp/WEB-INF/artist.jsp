@@ -16,16 +16,7 @@
 <!--     <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script> -->
     <script src="//code.jquery.com/jquery-1.12.4.js"></script>
   	<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script type="text/javascript" src="js/search.js"></script>
-    <script>
-      $(document).ready(function(){
-      	$(".container").toggle("explode");
-      	$(window).unload(function(){
-      		$(".container").toggle("explode");
-      		console.log("explode");
-      	});
-      });
-    </script>
+    <script type="text/javascript" src="js/artist.js"></script>
     <title>DskJckt</title>
 </head>
 <body>
@@ -36,6 +27,7 @@
 				<h2><a href="/">Back</a></h2>
 			</div>
 		</div>
+		<div class="hidden" id="artistID"><c:out value="${artistID}"></c:out></div>
 	</div>
 </body>
 </html><%@ page language="java" contentType="text/html; charset=UTF-8"

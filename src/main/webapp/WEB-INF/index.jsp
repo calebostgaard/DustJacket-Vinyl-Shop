@@ -10,7 +10,7 @@
 </head>
 <body>
 	<h1>Welcome to DstJckt, <c:out value="${user.firstName}"/></h1>
-	<a href="/songs/new">New Song</a> | <a href="/artists/new">New Artist</a> | <a href="/genres/new">New Genre</a> | <a href="/vinyls/new">New Vinyl</a> | <a href="/logout">Logout</a>
+	<a href="/songs/new">New Song</a> | <a href="/artists/new">New Artist</a> | <a href="/genres/new">New Genre</a> | <a href="/vinyls/new">New Vinyl</a> | <a href="/search">Search</a> | <a href="/logout">Logout</a>
 	<table>
 	    <thead>
 	        <tr>

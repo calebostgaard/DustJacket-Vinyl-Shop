@@ -70,8 +70,6 @@ public class SongController {
 										@RequestParam("vinyls") Long VinylID,
 										HttpSession session) {
 		Long loginId = (Long) session.getAttribute("userId");
-		System.out.println("This is the login in");
-		System.out.println(loginId);
 		if (loginId != null) {
 			Song thisSong = songService.findSong(SongID);
 			Vinyl thisVinyl = vinylService.findVinyl(VinylID);
@@ -81,6 +79,33 @@ public class SongController {
 		}
 		return "redirect:/login";
 	}
+	
+//	@RequestMapping(value="/vinyls/addsongs/{id}", method=RequestMethod.POST)
+//	public String addSongsToVinylV2(@PathVariable("id")Long SongID,
+//			@RequestParam("vinyls") Long VinylID,
+//			HttpSession session) {
+//		Long loginId = (Long) session.getAttribute("userId");
+//		if (loginId != null) {
+//			// check if song exists with the specific spotify ID
+//			// if song exists, pull that ID 
+//				//use the "/vinyls/addsongs/{id}" to execute addSongstoVinyl
+//			// if song does not exist:
+//				// check if genre exists
+//					// if not, create genre object
+//					// if does, pull genre
+//				// check if artist exists
+//					// if not, create artist object
+//					// if does, pull artist
+//				// create song object
+//				// execute function to add song to vinyl
+//			Song thisSong = songService.findSong(SongID);
+//			Vinyl thisVinyl = vinylService.findVinyl(VinylID);
+//			thisVinyl.getSongs().add(thisSong);
+//			vinylService.createVinyl(thisVinyl);
+//			return "redirect:/vinyls/"+ VinylID;
+//		}
+//		return "redirect:/login";
+//	}
 	
 	@GetMapping("/songs/new")
 	public String newSong(@ModelAttribute("users") User user, @ModelAttribute("song") Song song, Model model, HttpSession session) {
